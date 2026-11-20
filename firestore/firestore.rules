@@ -1,0 +1,382 @@
+rules_version = '2';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MGTik — قواعد سلامة بيانات الفئات والبروفايلات والتسعير.
+//
+// ملاحظات:
+//  • هذا الملف **كامل**: يغطي كل مجموعات التطبيق (تتبّعتها من الكود)، ويمكن نشره كما هو بدل القواعد الحالية.
+//    ما لم يُذكر فيه يُرفض افتراضياً، وغير المسجَّل مرفوض دائماً.
+//  • المشروع بمدير واحد: "signedIn()" = أي مستخدم مسجَّل الدخول بحساب حقيقي (البريد/كلمة المرور؛ الجلسات المجهولة
+//    مرفوضة). لا أدوار ولا صلاحيات وظيفية: المصادَق = وصول كامل. القواعد المفصّلة (الفئات/الباقات/الفواتير/الدفعات...)
+//    هدفها سلامة البيانات ومنع تجاوز قواعد العمل بكتابة مباشرة، وليست إدارة مستخدمين.
+//  • لا يوجد Backend أو Cloud Functions في المشروع: كل الكتابة تأتي من تطبيق Android مباشرة وتخضع لهذه القواعد.
+//  • القواعد لا تستطيع الاستعلام؛ لذلك الارتباطات علامات على الوثيقة نفسها:
+//      profiles/{id}.in_use            true بعد أول دفعة/اشتراك (لا يعود false)
+//      profile_categories/{id}.profile_count   عدّاد يتغيّر ±1 بنفس معاملة الباقة
+//  • Firebase Storage (مجلد assets_v1 للقوالب) له قواعد منفصلة في قسم Storage، وليس هنا.
+// ─────────────────────────────────────────────────────────────────────────────
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null
+        && request.auth.token.firebase.sign_in_provider != 'anonymous';
+    }
+
+    function catPath(id)     { return /databases/$(database)/documents/profile_categories/$(id); }
+    function profilePath(id) { return /databases/$(database)/documents/profiles/$(id); }
+    function ownerPath(id)   { return /databases/$(database)/documents/owners/$(id); }
+
+    function validPrice(v) { return v is int && v > 0; }
+
+    // ───────────── الفئات ─────────────
+    // الفئة تجارية: العملة (رمز ≤ 6 أحرف) وأسعار التجزئة/الجملة اختيارية (غياب/null = غير محدد) وإن وُجدت فعدد صحيح موجب.
+    function validCategory(d) {
+      return d.name_ar is string && d.name_ar.size() > 0
+        && d.get('status', 'active') in ['active', 'disabled', 'archived']
+        && (d.get('currency', null) == null || (d.currency is string && d.currency.size() > 0 && d.currency.size() <= 6))
+        && (d.get('retail_price_minor', null) == null || validPrice(d.retail_price_minor))
+        && (d.get('wholesale_price_minor', null) == null || validPrice(d.wholesale_price_minor));
+    }
+
+    // العملة ثابتة بعد تعيينها (الفئة القديمة بلا عملة تقبل تعيينها مرة واحدة).
+    function currencyUnchangedOrFirstSet() {
+      let before = resource.data.get('currency', null);
+      let after = request.resource.data.get('currency', null);
+      return before == null ? true : after == before;
+    }
+
+    // التصنيف النظامي: إلزامي عند الإنشاء (normal | subscription)، ثابت بعد تعيينه. الفئة القديمة بلا الحقل
+    // تقبل تعيينه مرة واحدة فقط.
+    function validSystemClass(v) { return v in ['normal', 'subscription']; }
+    function systemClassUnchangedOrFirstSet() {
+      let before = resource.data.get('system_class', null);
+      let after = request.resource.data.get('system_class', null);
+      return before == null ? (after == null || validSystemClass(after)) : after == before;
+    }
+
+    // العدّاد: يُهيَّأ مرة (غياب ← عدد ≥ 0) أو يتغيّر ±1 فقط (بمعاملة باقة).
+    function counterChangeOk() {
+      let before = resource.data.get('profile_count', null);
+      let after  = request.resource.data.get('profile_count', null);
+      return before == after
+        || (before == null && after is int && after >= 0)
+        || (before is int && after is int && after >= 0
+            && (after == before + 1 || after == before - 1));
+    }
+
+    function categoryAssignable(c) {
+      return exists(catPath(c))
+        && get(catPath(c)).data.get('status', 'active') == 'active'
+        && get(catPath(c)).data.get('profile_count', null) is int;
+    }
+
+    // إسناد باقة إلى فئة: نشطة + العدّاد يزيد 1 بنفس الكتابة الذرية.
+    function assignOk(c) {
+      return c == null
+        || (categoryAssignable(c)
+            && getAfter(catPath(c)).data.profile_count == get(catPath(c)).data.profile_count + 1);
+    }
+
+    // مغادرة فئة: العدّاد ينقص 1 (إن كان للفئة عدّاد وكانت موجودة).
+    function releaseOk(c) {
+      return c == null
+        || !exists(catPath(c))
+        || get(catPath(c)).data.get('profile_count', null) == null
+        || getAfter(catPath(c)).data.profile_count == get(catPath(c)).data.profile_count - 1;
+    }
+
+    match /profile_categories/{cid} {
+      allow read: if signedIn();
+      allow create: if signedIn()
+        && validCategory(request.resource.data)
+        && request.resource.data.get('status', 'active') == 'active'
+        && request.resource.data.get('profile_count', 0) == 0
+        && validSystemClass(request.resource.data.get('system_class', ''))
+        && request.resource.data.get('currency', null) is string;
+      allow update: if signedIn()
+        && validCategory(request.resource.data)
+        && systemClassUnchangedOrFirstSet()
+        && currencyUnchangedOrFirstSet()
+        && counterChangeOk();
+      // الحذف فقط لفئة عدّادها صفر (والعدّاد مهيّأ).
+      allow delete: if signedIn() && resource.data.get('profile_count', null) == 0;
+    }
+
+    // سجل التعديلات التجارية للفئة: يُنشأ فقط ولا يُعدَّل ولا يُحذف (سلامة السجل التاريخي).
+    match /profile_categories/{cid}/history/{hid} {
+      allow read: if signedIn();
+      allow create: if signedIn()
+        && request.resource.data.action is string
+        && request.resource.data.changes is list
+        && request.resource.data.at == request.time;
+      allow update, delete: if false;
+    }
+
+    // ───────────── البروفايلات ─────────────
+    function categoryPriced(c) {
+      return c != null && exists(catPath(c))
+        && (get(catPath(c)).data.get('retail_price_minor', null) is int
+            || get(catPath(c)).data.get('wholesale_price_minor', null) is int);
+    }
+
+    function validProfile(d) {
+      return d.linked_profile_name is string && d.linked_profile_name.size() > 0
+        && d.status in ['active', 'archived', 'missing', 'disabled']
+        && d.price_minor is int && d.price_minor >= 0
+        // الصفر ممنوع على باقة نشطة (لا بيع مجاني) إلا إن كان لفئتها سعر تجاري (السعر مصدره الفئة)
+        && (d.price_minor > 0 || d.status != 'active' || categoryPriced(d.get('category_id', null)))
+        && d.get('in_use', false) is bool;
+    }
+
+    // in_use لا يعود false بعد أن صار true.
+    function inUseMonotonic() {
+      return resource.data.get('in_use', false) != true
+        || request.resource.data.get('in_use', false) == true;
+    }
+
+    function categoryMoveOk() {
+      let oldC = resource.data.get('category_id', null);
+      let newC = request.resource.data.get('category_id', null);
+      return oldC == newC || (assignOk(newC) && releaseOk(oldC));
+    }
+
+    match /profiles/{pid} {
+      allow read: if signedIn();
+      allow create: if signedIn()
+        && validProfile(request.resource.data)
+        && request.resource.data.get('in_use', false) == false
+        && assignOk(request.resource.data.get('category_id', null));
+      allow update: if signedIn()
+        && validProfile(request.resource.data)
+        && inUseMonotonic()
+        && categoryMoveOk();
+      // لا حذف لباقة مستعملة؛ العلامة يجب أن تكون مهيّأة (false صريحة).
+      allow delete: if signedIn()
+        && resource.data.get('in_use', null) == false
+        && releaseOk(resource.data.get('category_id', null));
+    }
+
+    // ───────────── الأسعار الخاصة بالوكلاء ─────────────
+    // السعر الأساسي = profiles.price_minor (يخضع لـ validProfile). pricing_rules = أسعار خاصة فقط،
+    // معرّف المستند ثابت {profile}__{owner} فلا يتكرر. القواعد القديمة (بلا owner_id) لا تُكتب بعد الآن
+    // (القراءة والحذف مسموحان للتنظيف اليدوي).
+    function validSpecialPrice(d, rid) {
+      return d.keys().hasAll(['cloud_profile_id', 'owner_id', 'retail_price_minor', 'active'])
+        && d.owner_id is string && d.owner_id.size() > 0
+        && d.cloud_profile_id is string
+        && rid == d.cloud_profile_id + '__' + d.owner_id
+        && validPrice(d.retail_price_minor)
+        && d.active is bool
+        // التعطيل لا يحتاج وكيلاً/باقة صالحين (تنظيف)؛ التفعيل/الإنشاء يحتاجهما
+        && (d.active == false
+            || (exists(profilePath(d.cloud_profile_id))
+                && get(profilePath(d.cloud_profile_id)).data.status != 'archived'
+                && exists(ownerPath(d.owner_id))
+                && get(ownerPath(d.owner_id)).data.get('status', 'ACTIVE') != 'ARCHIVED'));
+    }
+
+    // السعر الخاص الحالي على مستوى الفئة: معرّف ثابت {category}__{owner}__{context}، بعملة الفئة نفسها،
+    // وسياق wholesale|retail. التفعيل/الإنشاء يحتاج فئة نشطة ومالكاً غير مؤرشف.
+    function validCategoryPrice(d, rid) {
+      return d.keys().hasAll(['category_id', 'owner_id', 'context', 'currency', 'retail_price_minor', 'active'])
+        && d.owner_id is string && d.owner_id.size() > 0
+        && d.category_id is string
+        && d.context in ['wholesale', 'retail']
+        && rid == d.category_id + '__' + d.owner_id + '__' + d.context
+        && validPrice(d.retail_price_minor)
+        && d.currency is string && d.currency.size() > 0
+        && d.active is bool
+        && (d.active == false
+            || (exists(catPath(d.category_id))
+                && get(catPath(d.category_id)).data.get('status', 'active') == 'active'
+                && get(catPath(d.category_id)).data.get('currency', null) == d.currency
+                && exists(ownerPath(d.owner_id))
+                && get(ownerPath(d.owner_id)).data.get('status', 'ACTIVE') != 'ARCHIVED'));
+    }
+
+    match /pricing_rules/{rid} {
+      allow read: if signedIn();
+      // الإنشاء بالنموذج الحالي فقط (فئة)؛ القواعد القديمة على مستوى البروفايل تبقى قابلة للتفعيل/التعطيل والحذف
+      allow create: if signedIn() && validCategoryPrice(request.resource.data, rid);
+      allow update: if signedIn()
+        && (validCategoryPrice(request.resource.data, rid) || validSpecialPrice(request.resource.data, rid));
+      allow delete: if signedIn();
+    }
+
+    // ───────────── شروط إضافية تُدمج في قواعد batches / subscriptions الحالية ─────────────
+    // (Firestore يجمع match المتداخلة بـ OR، لذا لا يمكن فرضها من هنا؛ أضفها بـ && إلى قواعدك.)
+    //
+    //   batches  create : signedIn() && batchCreateGuard()
+    //   batches  update : signedIn() && batchUpdateGuard()      // لقطة السعر لا تتغير
+    //   subscriptions create : signedIn() && subscriptionCreateGuard()
+    function batchCreateGuard() {
+      return validPrice(request.resource.data.price_per_voucher_minor)
+        // لقطة التسعير التاريخية إلزامية: القيمة تطابق سعر الكرت، مع العملة ونوع التسعير (جملة)
+        && request.resource.data.keys().hasAll(['price_snapshot_minor', 'price_currency', 'pricing_type'])
+        && request.resource.data.price_snapshot_minor == request.resource.data.price_per_voucher_minor
+        && request.resource.data.price_currency is string && request.resource.data.price_currency.size() > 0
+        && request.resource.data.pricing_type == 'wholesale'
+        && getAfter(profilePath(request.resource.data.cloud_profile_id)).data.get('in_use', false) == true;
+    }
+    function batchUpdateGuard() {
+      return !request.resource.data.diff(resource.data).affectedKeys()
+        .hasAny(['price_per_voucher_minor', 'price_source', 'price_rule_id', 'cloud_profile_id', 'owner_id',
+                 'price_snapshot_minor', 'price_currency', 'pricing_type', 'price_category_id', 'price_profile_id',
+                 'price_owner_id', 'price_category_name', 'price_at']);
+    }
+    function subscriptionCreateGuard() {
+      let pid = request.resource.data.get('profile_id', '');
+      // اشتراك جديد = بيع مباشر (تجزئة) بلقطة تسعير مركزية
+      return request.resource.data.get('pricing_type', '') == 'retail'
+        && request.resource.data.get('price_currency', '') != ''
+        && (pid == '' || !exists(profilePath(pid))
+        || getAfter(profilePath(pid)).data.get('in_use', false) == true);
+    }
+
+    // ───────────── الفواتير والدفعات (invoices / payments) ─────────────
+    // التطبيق يكتب الحالة بالحالتين (DUE من المحرك، due/paid… من معاملات الدفع)، لذا المقارنة case-insensitive.
+    // الهدف: لا فاتورة بأرقام متناقضة (مدفوع > إجمالي، متبقٍ ≠ إجمالي − مدفوع، خصم سالب)، ولا حذف سجل مالي،
+    // ولا تغيير مبلغ دفعة أو ربطها بفاتورة بعد إنشائها. الإلغاء يُعفى من تطابق المبالغ (يصفّر المتبقي).
+    function validInvoice(d) {
+      let st = d.status.lower();
+      return st in ['draft', 'paid', 'due', 'partially_paid', 'canceled']
+        && d.totalMinor is int && d.totalMinor >= 0
+        && d.subtotalMinor is int && d.subtotalMinor >= d.totalMinor
+        && d.amountPaidMinor is int && d.amountPaidMinor >= 0
+        && d.amountDueMinor is int
+        && (st == 'canceled'
+            || (d.amountPaidMinor <= d.totalMinor
+                && d.amountDueMinor == d.totalMinor - d.amountPaidMinor
+                && (st != 'paid' || d.amountDueMinor == 0)));
+    }
+
+    match /invoices/{iid} {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && validInvoice(request.resource.data);
+      allow delete: if false;   // الفاتورة تُلغى ولا تُحذف
+    }
+
+    match /payments/{pid} {
+      allow read: if signedIn();
+      allow create: if signedIn() && request.resource.data.amountMinor is int;
+      allow update: if signedIn()
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['amountMinor', 'invoiceId']);
+      allow delete: if false;   // الدفعة تُبطل/تُسترد ولا تُحذف
+    }
+
+    // مطابقات تجريبية لاختبارات المحاكي فقط — احذفها عند الدمج في قواعدك الحقيقية.
+    match /batches/{bid} {
+      allow read: if signedIn();
+      allow create: if signedIn() && batchCreateGuard();
+      allow update: if signedIn() && batchUpdateGuard();
+    }
+    // كروت الدفعة (batches/{id}/vouchers): تُكتب أثناء التوليد وتُقرأ للتصدير
+    match /batches/{bid}/vouchers/{vid} {
+      allow read, write: if signedIn();
+    }
+    match /subscriptions/{sid} {
+      allow read: if signedIn();
+      allow create: if signedIn() && subscriptionCreateGuard();
+    }
+    match /owners/{oid} {
+      allow read, write: if signedIn();
+    }
+
+    // ───────────── بقية المجموعات: المصادَق = وصول كامل (لا أدوار ولا صلاحيات وظيفية) ─────────────
+    // بلا هذه التطابقات تُرفض القراءة والكتابة افتراضياً (PERMISSION_DENIED) فيظهر «ليست لديك صلاحية» عند عمليات
+    // مثل دفتر الوكلاء والإشعارات والجلسات. غير المسجَّل (وأي جلسة مجهولة) يبقى مرفوضاً.
+    match /owner_ledger/{path=**} { allow read, write: if signedIn(); }
+    match /orders/{path=**} { allow read, write: if signedIn(); }
+    match /active_sessions/{path=**} { allow read, write: if signedIn(); }
+    match /hotspot_sessions/{path=**} { allow read, write: if signedIn(); }
+    match /hotspot_user_stats/{path=**} { allow read, write: if signedIn(); }
+    match /archived_users/{path=**} { allow read, write: if signedIn(); }
+    match /counters/{path=**} { allow read, write: if signedIn(); }
+    match /discovery_records/{path=**} { allow read, write: if signedIn(); }
+    match /executions/{path=**} { allow read, write: if signedIn(); }
+    match /historical_batches/{path=**} { allow read, write: if signedIn(); }
+    // سجل تدقيق مالي: إنشاء وقراءة فقط؛ لا تعديل ولا حذف (غير قابل للتغيير)
+    match /invoice_event_logs/{id} { allow read, create: if signedIn(); allow update, delete: if false; }
+    match /local_users/{path=**} { allow read, write: if signedIn(); }
+    match /notifications/{path=**} { allow read, write: if signedIn(); }
+    // تصنيف الباقات (تشغيلي فقط: لا أسعار). السرعات kbps، المدة بالثواني، الحجم بالبايت؛ غير المعرَّف = غياب/null.
+    // لا حذف: الأرشفة (status) هي المسار، فلا تنكسر ارتباطات بروفايلات سابقة. التصنيفات القديمة بلا الحقول تبقى صالحة.
+    function validClassification(d) {
+      return d.name_ar is string && d.name_ar.size() > 0
+        && d.get('status', 'active') in ['active', 'disabled', 'archived']
+        && (d.get('download_kbps', null) == null || (d.download_kbps is int && d.download_kbps > 0 && d.download_kbps <= 10000000))
+        && (d.get('upload_kbps', null) == null || (d.upload_kbps is int && d.upload_kbps > 0 && d.upload_kbps <= 10000000))
+        && (d.get('shared_users', null) == null || (d.shared_users is int && d.shared_users >= 1 && d.shared_users <= 9999))
+        && (d.get('limit_uptime_seconds', null) == null
+            || (d.limit_uptime_seconds is int && d.limit_uptime_seconds >= 1 && d.limit_uptime_seconds <= 4294967295))
+        && (d.get('limit_transfer_bytes', null) == null
+            || (d.limit_transfer_bytes is int && d.limit_transfer_bytes >= 1 && d.limit_transfer_bytes <= 1125899906842624))
+        // تصنيف لا يحمل حقولاً تجارية
+        && !d.keys().hasAny(['retail_price_minor', 'wholesale_price_minor', 'price_minor', 'currency']);
+    }
+    match /profile_classifications/{cid} {
+      allow read: if signedIn();
+      allow create: if signedIn() && validClassification(request.resource.data)
+        && request.resource.data.get('status', 'active') == 'active';
+      allow update: if signedIn() && validClassification(request.resource.data);
+      allow delete: if false;
+    }
+    match /profile_defaults/{path=**} { allow read, write: if signedIn(); }
+    // مكونات User Manager: السجل (المصدر/البصمة) واللقطات وسجل العمليات. المرجع التشغيلي هو الراوتر.
+    match /um_components/{path=**} { allow read, write: if signedIn(); }
+    match /um_component_snapshots/{path=**} { allow read, write: if signedIn(); }
+    match /um_operation_log/{path=**} { allow read, write: if signedIn(); }
+    match /subscription_invoices/{path=**} { allow read, write: if signedIn(); }
+    match /subscription_ops/{path=**} { allow read, write: if signedIn(); }
+    match /subscription_payments/{path=**} { allow read, write: if signedIn(); }
+    match /versions/{path=**} { allow read, write: if signedIn(); }
+    match /vouchers/{path=**} { allow read, write: if signedIn(); }
+    match /templates_v1/{path=**} { allow read, write: if signedIn(); }   // القوالب + versions
+    match /smoke_test/{path=**} { allow read, write: if signedIn(); }
+
+    // ───────────── الإعدادات (settings/company_info و router_config و userman_config) ─────────────
+    // التطبيق يقرأ ويكتب إعداد الراوتر هنا؛ غياب هذه القاعدة (أو ما يماثلها في القواعد المنشورة) يعني رفض القراءة
+    // والحفظ كلياً (PERMISSION_DENIED) فتفشل شاشة إعدادات الاتصال.
+    function validRouterConfig(d) {
+      return d.host is string && d.host.size() > 0
+        && d.port is int && d.port >= 1 && d.port <= 65535
+        && d.api_port is int && d.api_port >= 1 && d.api_port <= 65535
+        && d.username is string && d.username.size() > 0
+        && d.password is string
+        && d.use_ssl is bool
+        && d.connection_type in ['AUTO', 'REST', 'API'];
+    }
+    // بيانات الشركة: اسم الشركة إلزامي، وبقية الحقول نصوص بسقف طول (الغياب مقبول: وثائق قديمة)، والعملة رمز ≤ 6 أحرف.
+    // صيغة البريد/الروابط تُفحص في التطبيق (CompanyInfoValidator)؛ هنا النوع والطول فقط حتى لا تخزَّن قيم مشوّهة من أي عميل.
+    function textOk(d, k, max) { return d.get(k, '') is string && d.get(k, '').size() <= max; }
+    function validCompanyInfo(d) {
+      return d.company_name is string && d.company_name.size() > 0 && d.company_name.size() <= 120
+        && textOk(d, 'network_name', 120) && textOk(d, 'address', 300) && textOk(d, 'phone', 40)
+        && textOk(d, 'whatsapp', 40) && textOk(d, 'email', 200) && textOk(d, 'website', 500)
+        && textOk(d, 'logo_url', 1000) && textOk(d, 'login_url', 500) && textOk(d, 'footer_notes', 1000)
+        && d.get('currency_symbol', '₪') is string
+        && d.get('currency_symbol', '₪').size() > 0 && d.get('currency_symbol', '₪').size() <= 6;
+    }
+    // إعداد User Manager: الوضع من القيم المعروفة، والعميل وعنوان RADIUS واسم NAS غير فارغة (UserManConfigValidator يفرضها أيضاً)،
+    // والسر نص (قد يكون فارغاً قبل التهيئة).
+    function validUserManConfig(d) {
+      return d.mode in ['AUTO', 'V6', 'V7']
+        && d.customer is string && d.customer.size() > 0 && d.customer.size() <= 64
+        && d.radius_address is string && d.radius_address.size() > 0 && d.radius_address.size() <= 255
+        && d.radius_secret is string && d.radius_secret.size() <= 128
+        && d.nas_name is string && d.nas_name.size() > 0 && d.nas_name.size() <= 64;
+    }
+    function validSettingsDoc(docId, d) {
+      return docId == 'router_config' ? validRouterConfig(d)
+        : docId == 'company_info' ? validCompanyInfo(d)
+        : docId == 'userman_config' ? validUserManConfig(d)
+        : true;
+    }
+    match /settings/{docId} {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && validSettingsDoc(docId, request.resource.data);
+      allow delete: if false;
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "356935038106",
+    "project_id": "mgtik-hotspot",
+    "storage_bucket": "mgtik-hotspot.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:356935038106:android:b82a62c6605472ef2c1b23",
+        "android_client_info": {
+          "package_name": "ps.mgtik.hotspot"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1dwsDtlJ2t71CNg490Ta5ypYgZacY6uA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

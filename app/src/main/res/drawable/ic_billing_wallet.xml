@@ -1,0 +1,27 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- POS Billing Wallet & Revenue Ledger -->
+    <path
+        android:fillColor="@color/brand_surface_elevated"
+        android:strokeColor="@color/brand_primary"
+        android:strokeWidth="1.5"
+        android:pathData="M3,6 L19,6 C20.1,6 21,6.9 21,8 L21,18 C21,19.1 20.1,20 19,20 L3,20 C1.9,20 1,19.1 1,18 L1,8 C1,6.9 1.9,6 3,6 Z" />
+    <!-- Wallet Flap & Clasp -->
+    <path
+        android:fillColor="@color/brand_primary"
+        android:strokeColor="@color/brand_accent"
+        android:strokeWidth="1.2"
+        android:pathData="M15,11 L22,11 C22.6,11 23,11.4 23,12 L23,14 C23,14.6 22.6,15 22,15 L15,15 C13.9,15 13,14.1 13,13 C13,11.9 13.9,11 15,11 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M16,13m-1,0a1,1 0,1 1,2 0a1,1 0,1 1,-2 0" />
+    <!-- Folded Cash Bill Behind -->
+    <path
+        android:strokeColor="@color/brand_accent"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:pathData="M4,6 L4,4 C4,3.4 4.4,3 5,3 L18,3 C18.6,3 19,3.4 19,4 L19,6" />
+</vector>

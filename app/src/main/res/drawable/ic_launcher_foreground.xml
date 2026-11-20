@@ -1,0 +1,41 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- === شبكة الاتصالات الكوكبية (Constellation Network) === -->
+    <path
+        android:strokeColor="#00A3FF"
+        android:strokeWidth="2.2"
+        android:strokeLineCap="round"
+        android:pathData="M57,26 L78,39 M78,39 L78,61 M57,26 L44,42 M34,70 L46,78 M46,78 L65,83" />
+
+    <!-- الكرات المضيئة للشبكة -->
+    <path
+        android:fillColor="#00E5FF"
+        android:pathData="M57,26m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
+    <path
+        android:fillColor="#00B0FF"
+        android:pathData="M78,39m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
+    <path
+        android:fillColor="#0091EA"
+        android:pathData="M78,61m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
+    <path
+        android:fillColor="#00B0FF"
+        android:pathData="M46,78m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
+
+    <!-- === حرف G الهندسي الأبيض (مع الفراغ الداخلي) === -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M62,42 L79,52 L79,60 L65,84 L45,71 L49,62 L60,69 L68,54 L62,50 Z" />
+    <path
+        android:fillColor="#0A2540"
+        android:pathData="M63,58 L71,58 L71,68 L63,68 Z" />
+
+    <!-- === حرف M المحسن والنظيف (بدون تدرجات معقدة) === -->
+    <path
+        android:fillColor="#0070F3"
+        android:pathData="M27,32 L34,32 L46,53 L58,32 L65,32 L50,57 L50,72 L42,72 L42,57 Z M27,32 L34,32 L34,72 L27,72 Z" />
+
+</vector>
