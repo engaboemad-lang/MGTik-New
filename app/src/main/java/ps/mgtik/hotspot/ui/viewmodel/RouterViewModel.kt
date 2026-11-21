@@ -23,6 +23,7 @@ import ps.mgtik.hotspot.domain.model.ConfigLoadState
 import ps.mgtik.hotspot.domain.model.RouterInfo
 import ps.mgtik.hotspot.domain.model.RouterSaveOutcome
 import ps.mgtik.hotspot.domain.usecase.ObserveRouterStatusUseCase
+import ps.mgtik.hotspot.domain.usecase.RetryRouterConnectionUseCase
 import ps.mgtik.hotspot.domain.usecase.SaveRouterConfigUseCase
 import ps.mgtik.hotspot.domain.usecase.SkipRouterConnectionUseCase
 import ps.mgtik.hotspot.domain.usecase.TestRouterConnectionUseCase
