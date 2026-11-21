@@ -889,7 +889,7 @@
     <string name="sub_label_paid">Paid</string>
     <string name="sub_label_balance">Balance</string>
     <string name="sub_banner_conflict_title">Administrative state differs from the router</string>
-    <string name="sub_banner_conflict_body">The subscription is "%1$s" administratively but the router account is %2$s. Re-sync to resolve it.</string>
+    <string name="sub_banner_conflict_body">The subscription is \"%1$s\" administratively but the router account is %2$s. Re-sync to resolve it.</string>
     <string name="sub_banner_pending_title">Router command not completed: %1$s</string>
     <string name="sub_btn_renew">Renew</string>
     <string name="sub_btn_suspend">Suspend</string>
@@ -1048,7 +1048,7 @@
     <string name="profile_cat_profiles_count">%1$d package(s)</string>
     <string name="profile_cat_status_disabled">Disabled</string>
     <string name="profile_cat_delete_title">Delete category</string>
-    <string name="profile_cat_delete_confirm">"%1$s" will be permanently deleted. No package is deleted.</string>
+    <string name="profile_cat_delete_confirm">\"%1$s\" will be permanently deleted. No package is deleted.</string>
     <string name="profile_cat_delete_blocked">Cannot delete: the category has %1$d package(s). Move them or archive the category.</string>
     <string name="pricing_base_title">Base price</string>
     <string name="pricing_base_hint">Affects new operations only; past batches and invoices are unchanged.</string>
@@ -1383,7 +1383,7 @@
     <string name="user_action_reexport">Re-export to router</string>
     <string name="user_action_retry_sync">Retry sync</string>
     <string name="user_delete_router_title">Delete %1$s from the router</string>
-    <string name="user_delete_router_body">The user account is deleted from the router and its record stays in the system as "missing". It can be re-exported later if its voucher data is stored.</string>
+    <string name="user_delete_router_body">The user account is deleted from the router and its record stays in the system as \"missing\". It can be re-exported later if its voucher data is stored.</string>
     <string name="user_delete_null_title">Permanently delete %1$s</string>
     <string name="user_delete_null_body">This user is unassigned in the system. It will be permanently deleted from the router and cannot be recovered.</string>
     <string name="user_pending_delete_router">Delete from router pending — waiting to run</string>
@@ -1398,8 +1398,8 @@
     <string name="user_err_delete_unverified">Deleting the user from the router could not be verified, try again</string>
     <string name="user_err_state_unverified">The user state on the router did not match after the change, try again</string>
     <string name="user_err_reexport_source_missing">No stored password/profile for this user (adopted user or missing voucher), so it cannot be recreated</string>
-    <string name="user_err_missing_on_router">The user is not on the router. Use "Re-export to router"</string>
-    <string name="user_err_sync_not_applicable">The "expired" state does not define an explicit router state to enforce</string>
+    <string name="user_err_missing_on_router">The user is not on the router. Use \"Re-export to router\"</string>
+    <string name="user_err_sync_not_applicable">The \"expired\" state does not define an explicit router state to enforce</string>
     <string name="user_err_null_now_managed">This user is now managed in the system and is no longer unassigned</string>
     <string name="conflict_dialog_title">Settings conflict</string>
     <string name="conflict_close">Close</string>
@@ -1424,7 +1424,7 @@
     <string name="sysclass_err_user_subscription_managed">This is a monthly subscriber; manage it from the Subscriptions screen</string>
     <string name="sub_btn_open_details">Subscription details</string>
     <string name="sub_link_missing_title">No linked subscription</string>
-    <string name="sub_link_missing_body">No subscription was found for subscriber "%1$s", so its details cannot be opened. Check Billing or re-sync.</string>
+    <string name="sub_link_missing_body">No subscription was found for subscriber \"%1$s\", so its details cannot be opened. Check Billing or re-sync.</string>
     <string name="sub_link_missing_inline">No subscription is linked to this subscriber</string>
 
     <!-- S16: single user creation (NORMAL / SUBSCRIPTION) -->
@@ -1447,7 +1447,7 @@
     <string name="user_create_err_admin_inactive">The “admin” owner is not active (suspended or archived)</string>
     <string name="user_create_err_limits_invalid">The package or its classification has invalid usage limits</string>
     <string name="user_create_err_classification_missing">The package classification was not found; relink the package to a valid classification</string>
-    <string name="user_create_err_router_profile_out_of_sync">The package settings (speed, shared users, time/data limits, validity and its start policy) differ from its User Manager profile. Edit the router profile to match the package, or edit the package in its details to match the router ("Sync with router" adopts status, devices and speed only, not validity)</string>
+    <string name="user_create_err_router_profile_out_of_sync">The package settings (speed, shared users, time/data limits, validity and its start policy) differ from its User Manager profile. Edit the router profile to match the package, or edit the package in its details to match the router (\"Sync with router\" adopts status, devices and speed only, not validity)</string>
     <string name="gen_error_router_profile_missing">The package does not exist in User Manager on the router; create or sync it before generating</string>
     <string name="gen_error_user_router_unverified">The account could not be verified in User Manager (missing, without the package, or disabled) and was removed</string>
     <string name="gen_error_username_taken">The username was taken on the router by another account during the run; the voucher was not created and is not billed</string>
@@ -1891,7 +1891,7 @@
     <string name="um_check_secret_match">Shared secrets match</string>
     <string name="um_check_use_radius">Hotspot server profiles use RADIUS</string>
     <string name="um_check_radius_incoming">Router accepts RADIUS disconnect requests (radius incoming)</string>
-    <string name="um_fix_with_setup">Can be fixed with the "Set up router" button after you confirm; nothing changes automatically.</string>
+    <string name="um_fix_with_setup">Can be fixed with the \"Set up router\" button after you confirm; nothing changes automatically.</string>
     <string name="ERR_GEN_ROUTER_NOT_READY">Cards cannot be generated until the router setup is complete. Open the router setup, fix the missing items and retry</string>
     <string name="um_manual_package">Install the user-manager package on the router (System → Packages) and reboot it.</string>
     <string name="um_manual_customer">Create the customer in User Manager on the router, or change its name in the settings above.</string>
@@ -1936,7 +1936,7 @@
     <string name="profile_error_shared_users">Enter a number between 1 and 9999</string>
     <string name="profile_start_first_auth">Starts on first use</string>
     <string name="profile_start_assigned">Starts when assigned</string>
-    <string name="startup_router_failed_title">Couldn't connect to the router at startup</string>
+    <string name="startup_router_failed_title">Couldn\'t connect to the router at startup</string>
     <string name="router_untested_save_message">These settings haven\'t been tested yet. Save anyway?</string>
     <string name="router_untested_save_cancel">Cancel and go back to test</string>
     <string name="router_untested_save_confirm">Save anyway</string>
@@ -1996,7 +1996,7 @@
     <string name="um_read_ok_fmt">Reading %1$s: OK</string>
     <string name="um_read_failed_fmt">Reading %1$s failed: %2$s</string>
     <!-- إعدادات الربط/المزامنة: الإعدادات المخزَّنة تمثل الراوتر الفعلي -->
-    <string name="profile_error_router_validity_unsupported">The router profile's validity is not a whole number of hours, so it cannot be linked without changing it. Edit the validity on the router and try again.</string>
+    <string name="profile_error_router_validity_unsupported">The router profile\'s validity is not a whole number of hours, so it cannot be linked without changing it. Edit the validity on the router and try again.</string>
     <string name="profile_error_router_limit_unsupported">The uptime or transfer limit on the router profile is outside the range the app accepts, so it cannot be linked.</string>
     <string name="profile_error_router_verify_mismatch">The values were written to the router but the follow-up read did not match; the cloud was not updated. Re-sync and review the package.</string>
     <string name="profile_link_imported_title">Imported from the router (read-only)</string>
