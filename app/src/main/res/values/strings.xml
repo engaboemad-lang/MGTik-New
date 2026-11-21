@@ -1821,7 +1821,6 @@
     <string name="profile_detail_commercial_profile_note">هذه الباقة بلا فئة: يُعدَّل سعرها الخاص (التجزئة فقط).</string>
     <string name="profile_detail_commercial_note">التغيير يسري على العمليات الجديدة فقط؛ الاشتراكات والمستخدمون القائمون يحتفظون بأسعارهم المثبتة. فارغ = غير محدد.</string>
     <string name="profile_error_speed_one_way">صيغة السرعة غير صحيحة (مثال: 5M أو 512k، بدون «/»)</string>
-    <string name="profile_error_shared_users">عدد الجلسات: رقم من 1 إلى 9999</string>
     <string name="profile_detail_final_price">السعر النهائي ومصدره (بلا وكيل)</string>
     <string name="profile_detail_no_valid_price">لا يوجد سعر صالح</string>
     <string name="profile_detail_src_owner">سعر خاص بالمالك</string>

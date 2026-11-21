@@ -1799,7 +1799,6 @@
     <string name="profile_detail_commercial_profile_note">This profile has no category: its own price (retail only) is edited.</string>
     <string name="profile_detail_commercial_note">Changes apply to new operations only; existing subscriptions and users keep their locked prices. Empty = not set.</string>
     <string name="profile_error_speed_one_way">Invalid speed format (example: 5M or 512k, no slash)</string>
-    <string name="profile_error_shared_users">Session count: a number from 1 to 9999</string>
     <string name="profile_detail_final_price">Final price and source (no agent)</string>
     <string name="profile_detail_no_valid_price">No valid price</string>
     <string name="profile_detail_src_owner">Owner-specific price</string>
