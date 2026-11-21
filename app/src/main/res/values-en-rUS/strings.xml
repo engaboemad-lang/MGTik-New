@@ -339,6 +339,19 @@
     <string name="billing_dashboard_subtitle">Invoices, orders and subscriptions in one place</string>
     <string name="billing_btn_new_subscription">New subscription</string>
     <string name="billing_label_total_paid">Total paid</string>
+    <string name="billing_label_total_invoiced">Total invoiced (orders)</string>
+    <string name="billing_label_subs_collected">Subscriptions collected</string>
+    <string name="billing_label_subs_outstanding">Subscriptions outstanding</string>
+    <string name="inv_events_title">Activity log</string>
+    <string name="inv_events_empty">No recorded activity yet</string>
+    <string name="inv_event_PAYMENT_RECORDED">Payment recorded</string>
+    <string name="inv_event_CREDIT_APPLIED">Settled from owner credit</string>
+    <string name="inv_event_PAYMENT_VOIDED">Payment voided</string>
+    <string name="inv_event_PAYMENT_REFUNDED">Payment refunded</string>
+    <string name="inv_event_INVOICE_CANCELED">Invoice canceled</string>
+    <string name="inv_event_INVOICE_REOPENED">Invoice reopened</string>
+    <string name="inv_event_DISCOUNT_APPLIED">Discount applied</string>
+    <string name="inv_event_INVOICE_UPDATED">Invoice details edited</string>
     <string name="billing_label_total_outstanding">Total outstanding</string>
     <string name="billing_tab_invoices">Invoices (%1$d)</string>
     <string name="billing_tab_orders">Orders (%1$d)</string>
@@ -410,6 +423,9 @@
     <string name="owner_error_credit_exceeds_due">The amount is more than the invoice balance due</string>
     <string name="owner_error_credit_method_reserved">The \"credit\" method can only be used with the Pay from owner credit button</string>
     <string name="owner_error_not_found">Owner not found</string>
+    <string name="owner_error_not_active">The owner is suspended or archived: no new operations can be made in their name. Activate them first (existing users and invoices are unaffected)</string>
+    <string name="owner_error_name_required">Owner name is required</string>
+    <string name="owner_error_status_invalid">Invalid owner status</string>
     <string name="owner_btn_pay_from_credit">Pay from owner credit</string>
     <string name="owner_dialog_pay_from_credit_title">Settle the invoice from credit</string>
     <string name="owner_btn_archive">Archive owner</string>
@@ -468,6 +484,17 @@
     <string name="gen_prog_status_cancelled">Cancelled</string>
     <string name="gen_prog_status_completed">Completed</string>
     <string name="gen_prog_background_note">You can leave this screen; it keeps running in the background and resumes if the app is closed.</string>
+    <string name="gen_prog_successful">Successful</string>
+    <string name="gen_prog_requested_label">Requested</string>
+    <string name="gen_sync_local">Local save</string>
+    <string name="gen_sync_router">Router</string>
+    <string name="gen_sync_cloud">Cloud sync</string>
+    <string name="gen_sync_done">Done</string>
+    <string name="gen_sync_running">In progress</string>
+    <string name="gen_sync_failed">Failed</string>
+    <string name="gen_sync_pending">Pending</string>
+    <string name="gen_prog_remaining">Remaining</string>
+    <string name="gen_prog_error_detail">Details: %1$s</string>
     <string name="gen_btn_cancel">Cancel generation</string>
     <string name="gen_btn_retry">Retry</string>
     <string name="gen_btn_back_overview">Back to overview</string>
@@ -511,6 +538,7 @@
     <!-- Export (errors/hints) and template default -->
     <string name="export_txt_hint">A plain text file: one line per voucher (username ⇥ password), UTF-8 encoded.</string>
     <string name="export_error_batch_cancelled">This batch was cancelled and its vouchers were removed from the router, so it cannot be exported</string>
+    <string name="export_error_batch_not_ready">This batch is not completed yet, so it cannot be exported; its vouchers are not billed or verified yet</string>
     <string name="export_error_template">The selected template could not be loaded; connect to sync it or pick the default template</string>
     <string name="export_error_columns">Columns must be between 1 and 6</string>
     <string name="export_error_margins">The margins are larger than the page</string>
@@ -612,6 +640,12 @@
     <string name="rk_totalOutstandingMinor">Total outstanding</string>
     <string name="rk_paymentsCount">Payments count</string>
     <string name="rk_totalCollectedMinor">Total collected</string>
+    <string name="rk_totalRefundedMinor">Total refunded</string>
+    <string name="reports_export_csv">Export CSV</string>
+    <string name="reports_csv_section">Section</string>
+    <string name="reports_csv_item">Item</string>
+    <string name="reports_csv_metric">Metric</string>
+    <string name="reports_csv_value">Value</string>
     <string name="rk_byMethod">Collections by payment method</string>
     <string name="rk_ownersCount">Owners count</string>
     <string name="rk_owners">Owner performance</string>
@@ -716,6 +750,24 @@
     <string name="owner_label_due">Due</string>
     <string name="owner_status_suspended">Suspended</string>
     <string name="owner_empty_filtered">No matching owners</string>
+    <string name="owner_empty_all">No owners yet. Add the first one with the add button</string>
+    <string name="owner_tab_prices">Prices</string>
+    <string name="owner_label_invoiced_total">Total invoiced</string>
+    <string name="owner_label_paid_total">Collected</string>
+    <string name="owner_label_all_invoices_count">Invoices</string>
+    <string name="owner_prices_hint">%1$d special price(s) applied. Any category not listed here is sold to this owner at the category base price. Edit from the category screen.</string>
+    <string name="owner_prices_empty">No special prices for this owner: all operations use the category base price</string>
+    <string name="owner_prices_legacy">Legacy profile-level price</string>
+    <string name="owner_prices_ctx_wholesale">Wholesale</string>
+    <string name="owner_prices_ctx_retail">Retail</string>
+    <string name="owner_prices_base_unknown">Not set</string>
+    <string name="owner_prices_row_sub">%1$s · Base: %2$s</string>
+    <string name="owner_prices_applied">Applied</string>
+    <string name="owner_prices_disabled">Disabled</string>
+    <string name="owner_sort_title">Sort owners</string>
+    <string name="owner_sort_name">By name</string>
+    <string name="owner_sort_dues">Highest dues</string>
+    <string name="owner_sort_credit">Highest credit</string>
     <string name="owner_form_edit_title">Edit owner</string>
     <string name="owner_tab_invoices">Invoices</string>
     <string name="owner_tab_payments">Payments</string>
@@ -837,7 +889,7 @@
     <string name="sub_label_paid">Paid</string>
     <string name="sub_label_balance">Balance</string>
     <string name="sub_banner_conflict_title">Administrative state differs from the router</string>
-    <string name="sub_banner_conflict_body">The subscription is "%1$s" administratively but the router account is %2$s. Re-sync to resolve it.</string>
+    <string name="sub_banner_conflict_body">The subscription is \"%1$s\" administratively but the router account is %2$s. Re-sync to resolve it.</string>
     <string name="sub_banner_pending_title">Router command not completed: %1$s</string>
     <string name="sub_btn_renew">Renew</string>
     <string name="sub_btn_suspend">Suspend</string>
@@ -952,6 +1004,9 @@
     <string name="gen_comment_label">Accounts comment</string>
     <string name="gen_comment_hint">Applied to every account in this run and sent to the router</string>
     <string name="gen_confirm_details">Mode: %1$s</string>
+    <string name="gen_confirm_config">Prefix: %1$s · Username length: %2$d · Password: %3$s</string>
+    <string name="gen_confirm_names_seq">Sequential names from %1$s to %2$s (names already on the router are skipped)</string>
+    <string name="gen_confirm_names_random">Random names, e.g. %1$s</string>
     <string name="gen_error_mode_invalid">Invalid generation mode</string>
     <string name="gen_error_sequential_numeric">Sequential mode requires digits-only usernames</string>
     <string name="gen_error_password_type">Invalid password type</string>
@@ -993,7 +1048,7 @@
     <string name="profile_cat_profiles_count">%1$d package(s)</string>
     <string name="profile_cat_status_disabled">Disabled</string>
     <string name="profile_cat_delete_title">Delete category</string>
-    <string name="profile_cat_delete_confirm">"%1$s" will be permanently deleted. No package is deleted.</string>
+    <string name="profile_cat_delete_confirm">\"%1$s\" will be permanently deleted. No package is deleted.</string>
     <string name="profile_cat_delete_blocked">Cannot delete: the category has %1$d package(s). Move them or archive the category.</string>
     <string name="pricing_base_title">Base price</string>
     <string name="pricing_base_hint">Affects new operations only; past batches and invoices are unchanged.</string>
@@ -1328,7 +1383,7 @@
     <string name="user_action_reexport">Re-export to router</string>
     <string name="user_action_retry_sync">Retry sync</string>
     <string name="user_delete_router_title">Delete %1$s from the router</string>
-    <string name="user_delete_router_body">The user account is deleted from the router and its record stays in the system as "missing". It can be re-exported later if its voucher data is stored.</string>
+    <string name="user_delete_router_body">The user account is deleted from the router and its record stays in the system as \"missing\". It can be re-exported later if its voucher data is stored.</string>
     <string name="user_delete_null_title">Permanently delete %1$s</string>
     <string name="user_delete_null_body">This user is unassigned in the system. It will be permanently deleted from the router and cannot be recovered.</string>
     <string name="user_pending_delete_router">Delete from router pending — waiting to run</string>
@@ -1343,8 +1398,8 @@
     <string name="user_err_delete_unverified">Deleting the user from the router could not be verified, try again</string>
     <string name="user_err_state_unverified">The user state on the router did not match after the change, try again</string>
     <string name="user_err_reexport_source_missing">No stored password/profile for this user (adopted user or missing voucher), so it cannot be recreated</string>
-    <string name="user_err_missing_on_router">The user is not on the router. Use "Re-export to router"</string>
-    <string name="user_err_sync_not_applicable">The "expired" state does not define an explicit router state to enforce</string>
+    <string name="user_err_missing_on_router">The user is not on the router. Use \"Re-export to router\"</string>
+    <string name="user_err_sync_not_applicable">The \"expired\" state does not define an explicit router state to enforce</string>
     <string name="user_err_null_now_managed">This user is now managed in the system and is no longer unassigned</string>
     <string name="conflict_dialog_title">Settings conflict</string>
     <string name="conflict_close">Close</string>
@@ -1369,7 +1424,7 @@
     <string name="sysclass_err_user_subscription_managed">This is a monthly subscriber; manage it from the Subscriptions screen</string>
     <string name="sub_btn_open_details">Subscription details</string>
     <string name="sub_link_missing_title">No linked subscription</string>
-    <string name="sub_link_missing_body">No subscription was found for subscriber "%1$s", so its details cannot be opened. Check Billing or re-sync.</string>
+    <string name="sub_link_missing_body">No subscription was found for subscriber \"%1$s\", so its details cannot be opened. Check Billing or re-sync.</string>
     <string name="sub_link_missing_inline">No subscription is linked to this subscriber</string>
 
     <!-- S16: single user creation (NORMAL / SUBSCRIPTION) -->
@@ -1392,9 +1447,10 @@
     <string name="user_create_err_admin_inactive">The “admin” owner is not active (suspended or archived)</string>
     <string name="user_create_err_limits_invalid">The package or its classification has invalid usage limits</string>
     <string name="user_create_err_classification_missing">The package classification was not found; relink the package to a valid classification</string>
-    <string name="user_create_err_router_profile_out_of_sync">The package settings (speed, shared users, time/data limits, validity and its start policy) differ from its User Manager profile. Edit the router profile to match the package, or edit the package in its details to match the router ("Sync with router" adopts status, devices and speed only, not validity)</string>
+    <string name="user_create_err_router_profile_out_of_sync">The package settings (speed, shared users, time/data limits, validity and its start policy) differ from its User Manager profile. Edit the router profile to match the package, or edit the package in its details to match the router (\"Sync with router\" adopts status, devices and speed only, not validity)</string>
     <string name="gen_error_router_profile_missing">The package does not exist in User Manager on the router; create or sync it before generating</string>
     <string name="gen_error_user_router_unverified">The account could not be verified in User Manager (missing, without the package, or disabled) and was removed</string>
+    <string name="gen_error_username_taken">The username was taken on the router by another account during the run; the voucher was not created and is not billed</string>
     <string name="user_create_err_limits_unverified">The account was created but its router limits do not match the package; retry</string>
 
     <!-- Overview (S3): Monitoring / Quick Access / Quick Actions -->
@@ -1743,7 +1799,6 @@
     <string name="profile_detail_commercial_profile_note">This profile has no category: its own price (retail only) is edited.</string>
     <string name="profile_detail_commercial_note">Changes apply to new operations only; existing subscriptions and users keep their locked prices. Empty = not set.</string>
     <string name="profile_error_speed_one_way">Invalid speed format (example: 5M or 512k, no slash)</string>
-    <string name="profile_error_shared_users">Session count: a number from 1 to 9999</string>
     <string name="profile_detail_final_price">Final price and source (no agent)</string>
     <string name="profile_detail_no_valid_price">No valid price</string>
     <string name="profile_detail_src_owner">Owner-specific price</string>
@@ -1794,9 +1849,9 @@
     <string name="notif_drawer_billing_fmt">Billing alerts (%1$d)</string>
 
     <!-- User Manager: إعداد واتصال وصيانة (S32) -->
-    <string name="um_title">User Manager readiness</string>
+    <string name="um_title">User Manager setup &amp; connection</string>
     <string name="um_section_status">Status</string>
-    <string name="um_section_config">Advanced settings</string>
+    <string name="um_section_config">Connection settings</string>
     <string name="um_section_checks">Readiness checks</string>
     <string name="um_section_results">Provisioning result</string>
     <string name="um_gen_v6">User Manager — version 6 (/tool user-manager)</string>
@@ -1836,7 +1891,7 @@
     <string name="um_check_secret_match">Shared secrets match</string>
     <string name="um_check_use_radius">Hotspot server profiles use RADIUS</string>
     <string name="um_check_radius_incoming">Router accepts RADIUS disconnect requests (radius incoming)</string>
-    <string name="um_fix_with_setup">Can be fixed with the "Set up router" button after you confirm; nothing changes automatically.</string>
+    <string name="um_fix_with_setup">Can be fixed with the \"Set up router\" button after you confirm; nothing changes automatically.</string>
     <string name="ERR_GEN_ROUTER_NOT_READY">Cards cannot be generated until the router setup is complete. Open the router setup, fix the missing items and retry</string>
     <string name="um_manual_package">Install the user-manager package on the router (System → Packages) and reboot it.</string>
     <string name="um_manual_customer">Create the customer in User Manager on the router, or change its name in the settings above.</string>
@@ -1881,7 +1936,7 @@
     <string name="profile_error_shared_users">Enter a number between 1 and 9999</string>
     <string name="profile_start_first_auth">Starts on first use</string>
     <string name="profile_start_assigned">Starts when assigned</string>
-    <string name="startup_router_failed_title">Couldn't connect to the router at startup</string>
+    <string name="startup_router_failed_title">Couldn\'t connect to the router at startup</string>
     <string name="router_untested_save_message">These settings haven\'t been tested yet. Save anyway?</string>
     <string name="router_untested_save_cancel">Cancel and go back to test</string>
     <string name="router_untested_save_confirm">Save anyway</string>
@@ -1941,7 +1996,7 @@
     <string name="um_read_ok_fmt">Reading %1$s: OK</string>
     <string name="um_read_failed_fmt">Reading %1$s failed: %2$s</string>
     <!-- إعدادات الربط/المزامنة: الإعدادات المخزَّنة تمثل الراوتر الفعلي -->
-    <string name="profile_error_router_validity_unsupported">The router profile's validity is not a whole number of hours, so it cannot be linked without changing it. Edit the validity on the router and try again.</string>
+    <string name="profile_error_router_validity_unsupported">The router profile\'s validity is not a whole number of hours, so it cannot be linked without changing it. Edit the validity on the router and try again.</string>
     <string name="profile_error_router_limit_unsupported">The uptime or transfer limit on the router profile is outside the range the app accepts, so it cannot be linked.</string>
     <string name="profile_error_router_verify_mismatch">The values were written to the router but the follow-up read did not match; the cloud was not updated. Re-sync and review the package.</string>
     <string name="profile_link_imported_title">Imported from the router (read-only)</string>
@@ -1970,6 +2025,11 @@
     <string name="reports_preset_this_month">This month</string>
     <string name="reports_preset_last_month">Last month</string>
     <string name="reports_preset_custom">Custom</string>
+    <string name="billing_period_today">Today</string>
+    <string name="billing_period_all">All time</string>
+    <string name="billing_period_all_caption">All time</string>
+    <string name="billing_period_auto_note">Resets automatically every month</string>
+    <string name="billing_snapshot_note">Outstanding shows the current position regardless of the selected period</string>
     <string name="reports_picker_confirm">Apply</string>
     <string name="reports_delta_up">▲ %1$d%% vs previous period (%2$s)</string>
     <string name="reports_delta_down">▼ %1$d%% vs previous period (%2$s)</string>
@@ -1992,12 +2052,4 @@
     <string name="rk_failedBatches">Failed batches</string>
     <string name="rk_totalCreditMinor">Total available balances</string>
     <string name="rk_availableCreditMinor">Available balance</string>
-
-    <string name="ERR_CONFIG_UNAVAILABLE">Could not load the router settings from the cloud. Check the phone's internet connection (this is not a router problem)</string>
-    <string name="um_save_cloud_failed">Not saved: the cloud could not be reached. Check the internet and try again (the router is not involved in this step)</string>
-
-    <string name="um_advanced_hint">User Manager runs on the router itself over the same connection; there is no separate connection here. The generation is auto-detected from the RouterOS version; change the settings below only when necessary.</string>
-    <string name="um_advanced_show">Show advanced settings</string>
-    <string name="um_advanced_hide">Hide advanced settings</string>
-    <string name="um_mode_forced_warning">Generation is forced manually: a choice that does not match the router version breaks generation and user creation. Set it back to Auto if unsure.</string>
 </resources>

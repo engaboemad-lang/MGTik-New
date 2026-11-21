@@ -101,7 +101,6 @@ fun S32_UserManSetupScreen(
     var nasName by rememberSaveable { mutableStateOf(UserManConfig.DEFAULT_NAS_NAME) }
     var showSecret by rememberSaveable { mutableStateOf(false) }
     var confirmProvision by remember { mutableStateOf(false) }
-    var advancedOpen by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(state.configLoaded, state.saved) {
         if (state.configLoaded && !touched) {
@@ -115,8 +114,6 @@ fun S32_UserManSetupScreen(
     LaunchedEffect(router.isConnected) { if (router.isConnected && state.status == null) viewModel.refresh() }
 
     val mode = UserManMode.valueOf(modeName)
-    // أخطاء الحقول لا تُخفى في قسم مطويّ: يُفتح تلقائياً عند وجودها
-    val showAdvanced = advancedOpen || state.fieldErrors.isNotEmpty()
     fun draft() = UserManConfig(mode = mode, customer = customer, radiusAddress = address, radiusSecret = secret, nasName = nasName)
 
     val messageRes = state.successMessageResId ?: state.errorMessageResId
@@ -177,7 +174,51 @@ fun S32_UserManSetupScreen(
                 }
             }
 
-            // ── 2) الجاهزية والتهيئة (الإجراء الرئيسي) ──
+            // ── 2) إعداد الاتصال ──
+            UmCard {
+                UmCardTitle(stringResource(R.string.um_section_config))
+                Text(stringResource(R.string.um_mode_label), style = MaterialTheme.typography.labelLarge)
+                Row(horizontalArrangement = Arrangement.spacedBy(Dimens.SpaceSM)) {
+                    ModeChip(R.string.um_mode_auto, mode == UserManMode.AUTO) { touched = true; modeName = UserManMode.AUTO.name }
+                    ModeChip(R.string.um_mode_v6, mode == UserManMode.V6) { touched = true; modeName = UserManMode.V6.name }
+                    ModeChip(R.string.um_mode_v7, mode == UserManMode.V7) { touched = true; modeName = UserManMode.V7.name }
+                }
+                if (mode != UserManMode.V7) {
+                    UmField(R.string.um_field_customer, customer, state.fieldErrors[UserManField.CUSTOMER]) {
+                        touched = true; customer = it; viewModel.clearFieldError(UserManField.CUSTOMER)
+                    }
+                }
+                if (mode != UserManMode.V6) {
+                    UmField(R.string.um_field_nas_name, nasName, state.fieldErrors[UserManField.NAS_NAME]) {
+                        touched = true; nasName = it; viewModel.clearFieldError(UserManField.NAS_NAME)
+                    }
+                }
+                UmField(R.string.um_field_radius_address, address, state.fieldErrors[UserManField.RADIUS_ADDRESS], KeyboardType.Uri) {
+                    touched = true; address = it; viewModel.clearFieldError(UserManField.RADIUS_ADDRESS)
+                }
+                UmField(
+                    R.string.um_field_radius_secret, secret, state.fieldErrors[UserManField.RADIUS_SECRET], KeyboardType.Password,
+                    visualTransformation = if (showSecret) VisualTransformation.None else PasswordVisualTransformation(),
+                    trailing = {
+                        IconButton(onClick = { showSecret = !showSecret }) {
+                            Icon(if (showSecret) Icons.Default.VisibilityOff else Icons.Default.Visibility, contentDescription = null)
+                        }
+                    }
+                ) { touched = true; secret = it; viewModel.clearFieldError(UserManField.RADIUS_SECRET) }
+                TextButton(onClick = { touched = true; secret = UserManConfigValidator.generateSecret(); showSecret = true; viewModel.clearFieldError(UserManField.RADIUS_SECRET) }) {
+                    Icon(Icons.Default.Autorenew, contentDescription = null)
+                    Spacer(Modifier.width(Dimens.SpaceSM))
+                    Text(stringResource(R.string.um_generate_secret))
+                }
+                Button(onClick = { viewModel.save(draft()) }, enabled = !state.isBusy, modifier = Modifier.fillMaxWidth()) {
+                    Icon(Icons.Default.Save, contentDescription = null)
+                    Spacer(Modifier.width(Dimens.SpaceSM))
+                    Text(stringResource(R.string.um_save))
+                }
+                Text(stringResource(R.string.um_config_note), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+
+            // ── 3) الجاهزية والتهيئة ──
             UmCard {
                 UmCardTitle(stringResource(R.string.um_section_checks))
                 val status = state.status
@@ -222,59 +263,6 @@ fun S32_UserManSetupScreen(
                     UserManProvisionResult(state.provisionSteps)
                 }
             }
-            // ── 3) إعدادات متقدمة (مطوية افتراضياً) ──
-            UmCard {
-                UmCardTitle(stringResource(R.string.um_section_config))
-                Text(stringResource(R.string.um_advanced_hint), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                TextButton(onClick = { advancedOpen = !advancedOpen }, modifier = Modifier.fillMaxWidth()) {
-                    Text(stringResource(if (showAdvanced) R.string.um_advanced_hide else R.string.um_advanced_show))
-                }
-            if (showAdvanced) {
-                Text(stringResource(R.string.um_mode_label), style = MaterialTheme.typography.labelLarge)
-                if (mode != UserManMode.AUTO) {
-                    Text(stringResource(R.string.um_mode_forced_warning), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.error)
-                }
-                Row(horizontalArrangement = Arrangement.spacedBy(Dimens.SpaceSM)) {
-                    ModeChip(R.string.um_mode_auto, mode == UserManMode.AUTO) { touched = true; modeName = UserManMode.AUTO.name }
-                    ModeChip(R.string.um_mode_v6, mode == UserManMode.V6) { touched = true; modeName = UserManMode.V6.name }
-                    ModeChip(R.string.um_mode_v7, mode == UserManMode.V7) { touched = true; modeName = UserManMode.V7.name }
-                }
-                if (mode != UserManMode.V7) {
-                    UmField(R.string.um_field_customer, customer, state.fieldErrors[UserManField.CUSTOMER]) {
-                        touched = true; customer = it; viewModel.clearFieldError(UserManField.CUSTOMER)
-                    }
-                }
-                if (mode != UserManMode.V6) {
-                    UmField(R.string.um_field_nas_name, nasName, state.fieldErrors[UserManField.NAS_NAME]) {
-                        touched = true; nasName = it; viewModel.clearFieldError(UserManField.NAS_NAME)
-                    }
-                }
-                UmField(R.string.um_field_radius_address, address, state.fieldErrors[UserManField.RADIUS_ADDRESS], KeyboardType.Uri) {
-                    touched = true; address = it; viewModel.clearFieldError(UserManField.RADIUS_ADDRESS)
-                }
-                UmField(
-                    R.string.um_field_radius_secret, secret, state.fieldErrors[UserManField.RADIUS_SECRET], KeyboardType.Password,
-                    visualTransformation = if (showSecret) VisualTransformation.None else PasswordVisualTransformation(),
-                    trailing = {
-                        IconButton(onClick = { showSecret = !showSecret }) {
-                            Icon(if (showSecret) Icons.Default.VisibilityOff else Icons.Default.Visibility, contentDescription = null)
-                        }
-                    }
-                ) { touched = true; secret = it; viewModel.clearFieldError(UserManField.RADIUS_SECRET) }
-                TextButton(onClick = { touched = true; secret = UserManConfigValidator.generateSecret(); showSecret = true; viewModel.clearFieldError(UserManField.RADIUS_SECRET) }) {
-                    Icon(Icons.Default.Autorenew, contentDescription = null)
-                    Spacer(Modifier.width(Dimens.SpaceSM))
-                    Text(stringResource(R.string.um_generate_secret))
-                }
-                Button(onClick = { viewModel.save(draft()) }, enabled = !state.isBusy, modifier = Modifier.fillMaxWidth()) {
-                    Icon(Icons.Default.Save, contentDescription = null)
-                    Spacer(Modifier.width(Dimens.SpaceSM))
-                    Text(stringResource(R.string.um_save))
-                }
-                Text(stringResource(R.string.um_config_note), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            }
-            }
-
         }
     }
 
@@ -292,12 +280,7 @@ fun S32_UserManSetupScreen(
                 }
             },
             confirmButton = {
-                Button(onClick = {
-                    confirmProvision = false
-                    // السر مشترك داخلي بين الراوتر ونفسه: لا يُطلب من المستخدم، يُولَّد قوياً عند غيابه
-                    if (secret.isBlank()) { secret = UserManConfigValidator.generateSecret() }
-                    viewModel.provision(draft())
-                }) { Text(stringResource(R.string.um_confirm_run)) }
+                Button(onClick = { confirmProvision = false; viewModel.provision(draft()) }) { Text(stringResource(R.string.um_confirm_run)) }
             },
             dismissButton = { TextButton(onClick = { confirmProvision = false }) { Text(stringResource(R.string.common_cancel)) } }
         )

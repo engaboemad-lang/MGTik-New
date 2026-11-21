@@ -170,11 +170,7 @@ class UserManViewModel @Inject constructor(
                 true
             }
             is AppResult.Error -> {
-                // الحفظ يكتب في السحابة لا في الراوتر: مهلته/انقطاعه لا يُعرضان كمشكلة اتصال بالراوتر
-                val cloudDown = res.error.code == ApiError.CODE_TIMEOUT || res.error.code == ApiError.CODE_NETWORK_UNAVAILABLE
-                _uiState.update {
-                    it.copy(isSaving = false, errorMessageResId = if (cloudDown) R.string.um_save_cloud_failed else ps.mgtik.hotspot.ui.util.ErrorTranslator.resIdOf(res.error))
-                }
+                _uiState.update { it.copy(isSaving = false, errorMessageResId = ps.mgtik.hotspot.ui.util.ErrorTranslator.resIdOf(res.error)) }
                 false
             }
             is AppResult.Loading -> { _uiState.update { it.copy(isSaving = false) }; false }

@@ -205,12 +205,7 @@ class RouterConnectionManager @Inject constructor(
             throw RouterApiException(
                 // v6 (لا REST) وكلمة المرور خاطئة: خطأ المصادقة من API هو الأدق؛ غير ذلك خطأ REST
                 // (REST_UNAVAILABLE رسالته موحّدة وتذكر خدمتي REST وAPI معاً)
-                // مهلة REST (خدمة www مغلقة بجدار ناري مثلاً) لا تفسّر فشل API: إن كان خطأ API أدق (منفذ مغلق/مضيف لا يُوصل) نعرضه
-                when {
-                    apiError.code == ApiError.CODE_ROUTER_AUTH_FAILED -> apiError
-                    restError.code == ApiError.CODE_TIMEOUT && apiError.code != ApiError.CODE_TIMEOUT -> apiError
-                    else -> restError
-                }
+                if (apiError.code == ApiError.CODE_ROUTER_AUTH_FAILED) apiError else restError
             )
         }
     }
