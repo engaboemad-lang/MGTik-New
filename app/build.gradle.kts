@@ -64,6 +64,7 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.hilt.navigation.compose)
     
     // Splash Screen API
     implementation("androidx.core:core-splashscreen:1.2.0")

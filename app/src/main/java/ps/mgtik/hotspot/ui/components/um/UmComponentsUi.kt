@@ -58,7 +58,7 @@ fun driftLabel(d: DriftState): String? = when (d) {
 
 /** حقل رقمي صحيح غير سالب؛ النص الفارغ = null. */
 @Composable
-fun UmNumberField(label: String, value: String, onChange: (String) -> Unit, modifier: Modifier = Modifier.fillMaxWidth()) {
+fun UmNumberField(label: String, value: String, modifier: Modifier = Modifier.fillMaxWidth(), onChange: (String) -> Unit) {
     OutlinedTextField(
         value = value, onValueChange = { onChange(it.filter(Char::isDigit).take(12)) },
         label = { Text(label) }, singleLine = true, modifier = modifier,
