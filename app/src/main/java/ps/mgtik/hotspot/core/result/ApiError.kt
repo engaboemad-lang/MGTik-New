@@ -23,6 +23,8 @@ data class ApiError(
     companion object {
         const val CODE_NETWORK_UNAVAILABLE = "ERR_NETWORK_UNAVAILABLE"
         const val CODE_TIMEOUT = "ERR_TIMEOUT"
+        /** تعذّر تحميل إعدادات الراوتر من السحابة خلال المهلة: ليست مهلة اتصال بالراوتر ولا عطلاً فيه. */
+        const val CODE_CONFIG_UNAVAILABLE = "ERR_CONFIG_UNAVAILABLE"
         const val CODE_UNEXPECTED_CLIENT = "ERR_UNEXPECTED_CLIENT"
         const val CODE_AUTH_INVALID_CREDENTIALS = "ERR_AUTH_INVALID_CREDENTIALS"
         const val CODE_AUTH_USER_DISABLED = "ERR_AUTH_USER_DISABLED"

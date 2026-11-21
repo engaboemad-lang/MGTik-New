@@ -359,19 +359,6 @@
     <string name="billing_dashboard_subtitle">الفواتير والطلبات والاشتراكات في مكان واحد</string>
     <string name="billing_btn_new_subscription">اشتراك جديد</string>
     <string name="billing_label_total_paid">إجمالي المدفوع</string>
-    <string name="billing_label_total_invoiced">إجمالي المفوتر (الطلبات)</string>
-    <string name="billing_label_subs_collected">محصَّل الاشتراكات</string>
-    <string name="billing_label_subs_outstanding">مستحق الاشتراكات</string>
-    <string name="inv_events_title">سجل العمليات</string>
-    <string name="inv_events_empty">لا توجد عمليات مسجلة بعد</string>
-    <string name="inv_event_PAYMENT_RECORDED">تسجيل دفعة</string>
-    <string name="inv_event_CREDIT_APPLIED">تسوية من رصيد الوكيل</string>
-    <string name="inv_event_PAYMENT_VOIDED">إبطال دفعة</string>
-    <string name="inv_event_PAYMENT_REFUNDED">استرداد دفعة</string>
-    <string name="inv_event_INVOICE_CANCELED">إلغاء الفاتورة</string>
-    <string name="inv_event_INVOICE_REOPENED">إعادة فتح الفاتورة</string>
-    <string name="inv_event_DISCOUNT_APPLIED">تطبيق خصم</string>
-    <string name="inv_event_INVOICE_UPDATED">تعديل بيانات الفاتورة</string>
     <string name="billing_label_total_outstanding">إجمالي المستحق</string>
     <string name="billing_tab_invoices">الفواتير (%1$d)</string>
     <string name="billing_tab_orders">الطلبات (%1$d)</string>
@@ -443,9 +430,6 @@
     <string name="owner_error_credit_exceeds_due">المبلغ أكبر من المستحق على الفاتورة</string>
     <string name="owner_error_credit_method_reserved">طريقة «رصيد» تُستعمل فقط عبر زر التسوية من الرصيد</string>
     <string name="owner_error_not_found">المالك غير موجود</string>
-    <string name="owner_error_not_active">الوكيل موقوف أو مؤرشف: لا يمكن إجراء عمليات جديدة باسمه. فعّله أولاً (المستخدمون والفواتير القائمة لا تتأثر)</string>
-    <string name="owner_error_name_required">اسم الوكيل مطلوب</string>
-    <string name="owner_error_status_invalid">حالة الوكيل غير صالحة</string>
     <string name="owner_btn_pay_from_credit">تسوية من رصيد المالك</string>
     <string name="owner_dialog_pay_from_credit_title">تسوية الفاتورة من الرصيد</string>
     <string name="owner_btn_archive">أرشفة المالك</string>
@@ -504,17 +488,6 @@
     <string name="gen_prog_status_cancelled">أُلغي</string>
     <string name="gen_prog_status_completed">اكتمل</string>
     <string name="gen_prog_background_note">يمكنك مغادرة الشاشة؛ يستمر التنفيذ في الخلفية ويُستأنف إن أُغلق التطبيق.</string>
-    <string name="gen_prog_successful">الناجح</string>
-    <string name="gen_prog_requested_label">العدد المطلوب</string>
-    <string name="gen_sync_local">الحفظ المحلي</string>
-    <string name="gen_sync_router">الراوتر</string>
-    <string name="gen_sync_cloud">المزامنة السحابية</string>
-    <string name="gen_sync_done">تم</string>
-    <string name="gen_sync_running">جارٍ</string>
-    <string name="gen_sync_failed">فشل</string>
-    <string name="gen_sync_pending">بالانتظار</string>
-    <string name="gen_prog_remaining">المتبقي</string>
-    <string name="gen_prog_error_detail">تفاصيل: %1$s</string>
     <string name="gen_btn_cancel">إلغاء التوليد</string>
     <string name="gen_btn_retry">إعادة المحاولة</string>
     <string name="gen_btn_back_overview">العودة للرئيسية</string>
@@ -558,7 +531,6 @@
     <!-- Export (errors/hints) and template default -->
     <string name="export_txt_hint">ملف نصي بسيط: سطر لكل كرت (اسم المستخدم ⇥ كلمة المرور)، بترميز UTF-8.</string>
     <string name="export_error_batch_cancelled">هذه الدفعة أُلغيت وحُذفت كروتها من الراوتر، فلا يمكن تصديرها</string>
-    <string name="export_error_batch_not_ready">لا يمكن تصدير الدفعة قبل اكتمالها؛ كروتها لم تُفوتَر ولم يُتحقق منها بعد</string>
     <string name="export_error_template">تعذر تحميل القالب المختار؛ اتصل بالإنترنت لمزامنته أو اختر القالب الافتراضي</string>
     <string name="export_error_columns">عدد الأعمدة بين 1 و6</string>
     <string name="export_error_margins">الهوامش أكبر من الصفحة</string>
@@ -660,12 +632,6 @@
     <string name="rk_totalOutstandingMinor">إجمالي المستحق</string>
     <string name="rk_paymentsCount">عدد الدفعات</string>
     <string name="rk_totalCollectedMinor">إجمالي المحصّل</string>
-    <string name="rk_totalRefundedMinor">إجمالي المسترد</string>
-    <string name="reports_export_csv">تصدير CSV</string>
-    <string name="reports_csv_section">القسم</string>
-    <string name="reports_csv_item">البند</string>
-    <string name="reports_csv_metric">المؤشر</string>
-    <string name="reports_csv_value">القيمة</string>
     <string name="rk_byMethod">التحصيل حسب طريقة الدفع</string>
     <string name="rk_ownersCount">عدد الملاك</string>
     <string name="rk_owners">أداء الملاك</string>
@@ -770,24 +736,6 @@
     <string name="owner_label_due">مستحق</string>
     <string name="owner_status_suspended">موقوف</string>
     <string name="owner_empty_filtered">لا يوجد ملاك مطابقون</string>
-    <string name="owner_empty_all">لا يوجد وكلاء بعد. أضف أول وكيل بزر الإضافة</string>
-    <string name="owner_tab_prices">الأسعار</string>
-    <string name="owner_label_invoiced_total">إجمالي الفوترة</string>
-    <string name="owner_label_paid_total">المحصَّل</string>
-    <string name="owner_label_all_invoices_count">عدد الفواتير</string>
-    <string name="owner_prices_hint">%1$d سعراً خاصاً مطبَّقاً. أي فئة غير مذكورة هنا تُباع لهذا الوكيل بسعر الفئة الأساسي. التعديل من شاشة الفئة.</string>
-    <string name="owner_prices_empty">لا أسعار خاصة لهذا الوكيل: كل عملياته بسعر الفئة الأساسي</string>
-    <string name="owner_prices_legacy">سعر قديم على مستوى الباقة</string>
-    <string name="owner_prices_ctx_wholesale">جملة</string>
-    <string name="owner_prices_ctx_retail">تجزئة</string>
-    <string name="owner_prices_base_unknown">غير محدد</string>
-    <string name="owner_prices_row_sub">%1$s · الأساسي: %2$s</string>
-    <string name="owner_prices_applied">مطبَّق</string>
-    <string name="owner_prices_disabled">معطَّل</string>
-    <string name="owner_sort_title">ترتيب الوكلاء</string>
-    <string name="owner_sort_name">حسب الاسم</string>
-    <string name="owner_sort_dues">الأعلى مستحقاً</string>
-    <string name="owner_sort_credit">الأعلى رصيداً</string>
     <string name="owner_form_edit_title">تعديل بيانات المالك</string>
     <string name="owner_tab_invoices">الفواتير</string>
     <string name="owner_tab_payments">الدفعات</string>
@@ -1024,9 +972,6 @@
     <string name="gen_comment_label">تعليق الحسابات</string>
     <string name="gen_comment_hint">يُطبَّق على كل حسابات هذه العملية ويُرسل إلى الراوتر</string>
     <string name="gen_confirm_details">الوضع: %1$s</string>
-    <string name="gen_confirm_config">البادئة: %1$s · طول الاسم: %2$d · كلمة المرور: %3$s</string>
-    <string name="gen_confirm_names_seq">الأسماء بالتسلسل من %1$s إلى %2$s (قد تُتخطّى أسماء موجودة على الراوتر)</string>
-    <string name="gen_confirm_names_random">أسماء عشوائية، مثال: %1$s</string>
     <string name="gen_error_mode_invalid">وضع التوليد غير صالح</string>
     <string name="gen_error_sequential_numeric">الوضع التسلسلي يتطلب أسماء أرقام فقط</string>
     <string name="gen_error_password_type">نوع كلمة المرور غير صالح</string>
@@ -1472,7 +1417,6 @@
     <string name="user_create_err_router_profile_out_of_sync">إعدادات الباقة (السرعة/الجلسات/حدود الوقت والبيانات/الصلاحية وسياسة بدايتها) تختلف عن بروفايلها في User Manager. عدّل البروفايل في الراوتر ليطابق الباقة، أو عدّل الباقة من تفاصيلها لتطابق الراوتر (زر «مزامنة مع الراوتر» يتبنّى الحالة والأجهزة والسرعة فقط، لا الصلاحية)</string>
     <string name="gen_error_router_profile_missing">الباقة غير موجودة في User Manager على الراوتر؛ أنشئها أو زامنها قبل التوليد</string>
     <string name="gen_error_user_router_unverified">لم يتحقق الحساب في User Manager (غير موجود أو بلا الباقة أو معطَّل) وتم حذفه</string>
-    <string name="gen_error_username_taken">اسم المستخدم أُخذ على الراوتر بحساب آخر أثناء التنفيذ؛ لم يُنشأ الكرت ولا يُفوتَر</string>
     <string name="user_create_err_limits_unverified">أُنشئ الحساب لكن قيوده على الراوتر لا تطابق الباقة؛ أعد المحاولة</string>
 
     <!-- نظرة عامة (S3): المراقبة العامة / الوصول السريع / إجراءات سريعة -->
@@ -1821,6 +1765,7 @@
     <string name="profile_detail_commercial_profile_note">هذه الباقة بلا فئة: يُعدَّل سعرها الخاص (التجزئة فقط).</string>
     <string name="profile_detail_commercial_note">التغيير يسري على العمليات الجديدة فقط؛ الاشتراكات والمستخدمون القائمون يحتفظون بأسعارهم المثبتة. فارغ = غير محدد.</string>
     <string name="profile_error_speed_one_way">صيغة السرعة غير صحيحة (مثال: 5M أو 512k، بدون «/»)</string>
+    <string name="profile_error_shared_users">عدد الجلسات: رقم من 1 إلى 9999</string>
     <string name="profile_detail_final_price">السعر النهائي ومصدره (بلا وكيل)</string>
     <string name="profile_detail_no_valid_price">لا يوجد سعر صالح</string>
     <string name="profile_detail_src_owner">سعر خاص بالمالك</string>
@@ -1871,9 +1816,9 @@
     <string name="notif_drawer_billing_fmt">تنبيهات الفواتير (%1$d)</string>
 
     <!-- User Manager: إعداد واتصال وصيانة (S32) -->
-    <string name="um_title">إعداد واتصال User Manager</string>
+    <string name="um_title">جاهزية User Manager</string>
     <string name="um_section_status">الحالة</string>
-    <string name="um_section_config">إعداد الاتصال</string>
+    <string name="um_section_config">إعدادات متقدمة</string>
     <string name="um_section_checks">فحوص الجاهزية</string>
     <string name="um_section_results">نتيجة التهيئة</string>
     <string name="um_gen_v6">User Manager — الإصدار 6 (/tool user-manager)</string>
@@ -2047,11 +1992,6 @@
     <string name="reports_preset_this_month">هذا الشهر</string>
     <string name="reports_preset_last_month">الشهر الماضي</string>
     <string name="reports_preset_custom">مخصص</string>
-    <string name="billing_period_today">اليوم</string>
-    <string name="billing_period_all">كل الفترات</string>
-    <string name="billing_period_all_caption">كل الفترات</string>
-    <string name="billing_period_auto_note">تتجدد تلقائياً كل شهر</string>
-    <string name="billing_snapshot_note">المستحق يعرض الوضع الحالي بغض النظر عن الفترة المختارة</string>
     <string name="reports_picker_confirm">تطبيق</string>
     <string name="reports_delta_up">▲ %1$d%% عن الفترة السابقة (%2$s)</string>
     <string name="reports_delta_down">▼ %1$d%% عن الفترة السابقة (%2$s)</string>
@@ -2074,4 +2014,12 @@
     <string name="rk_failedBatches">دفعات فاشلة</string>
     <string name="rk_totalCreditMinor">إجمالي الأرصدة المتاحة</string>
     <string name="rk_availableCreditMinor">الرصيد المتاح</string>
+
+    <string name="ERR_CONFIG_UNAVAILABLE">تعذّر تحميل إعدادات الراوتر من السحابة. تحقق من اتصال الهاتف بالإنترنت (المشكلة ليست في الراوتر)</string>
+    <string name="um_save_cloud_failed">لم يُحفظ الإعداد: تعذّر الوصول إلى السحابة. تحقق من الإنترنت وأعد المحاولة (الراوتر غير معني بهذه العملية)</string>
+
+    <string name="um_advanced_hint">User Manager يعمل على الراوتر نفسه وبنفس اتصاله؛ لا اتصال منفصل هنا. الجيل يُكتشف تلقائياً من إصدار RouterOS، ولا تغيّر الإعدادات أدناه إلا عند الضرورة.</string>
+    <string name="um_advanced_show">إظهار الإعدادات المتقدمة</string>
+    <string name="um_advanced_hide">إخفاء الإعدادات المتقدمة</string>
+    <string name="um_mode_forced_warning">الجيل مفروض يدوياً: اختيار لا يطابق إصدار الراوتر يعطّل التوليد وإنشاء المستخدمين. أعده إلى «تلقائي» إن لم تكن متأكداً.</string>
 </resources>
